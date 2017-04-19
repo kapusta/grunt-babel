@@ -15,23 +15,28 @@ $ npm install --save-dev grunt-babel babel-preset-es2015
 ## Usage
 
 ```js
-require('load-grunt-tasks')(grunt); // npm install --save-dev load-grunt-tasks
-
-grunt.initConfig({
-	babel: {
-		options: {
-			sourceMap: true,
-			presets: ['es2015']
-		},
-		dist: {
-			files: {
-				'dist/app.js': 'src/app.js'
+module.exports = function (grunt) {
+	grunt.loadNpmTasks('grunt-babel');
+	grunt.registerTask('default', ['babel']);
+	grunt.initConfig({
+		babel: {
+			options: {
+				comments: false,
+				compact: true,
+				sourceMaps: true,
+				minified: true,
+				presets: ['es2015']
+			},
+			dist: {
+				src: [
+					'./src/js/foo.js',
+					'./src/js/**/*.js'
+				],
+				dest: './dist/foo.min.js'
 			}
 		}
-	}
-});
-
-grunt.registerTask('default', ['babel']);
+	});
+};
 ```
 
 
