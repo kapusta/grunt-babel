@@ -1,4 +1,5 @@
 'use strict';
+var fs = require('fs');
 var path = require('path');
 var babel = require('babel-core');
 
@@ -10,25 +11,26 @@ module.exports = function (grunt) {
 			delete options.filename;
 			delete options.filenameRelative;
 
-			options.sourceFileName = path.relative(path.dirname(el.dest), el.src[0]);
+			console.log('Converting', el.src.length, 'file(s)');
 
-			if (process.platform === 'win32') {
-				options.sourceFileName = options.sourceFileName.replace(/\\/g, '/');
-			}
+			var code = el.src.map(function (filePath) {
+				var path = (process.platform === 'win32') ? filePath.replace(/\\/g, '/') : filePath;
+				return fs.readFileSync(path, 'utf8');
+			});
 
 			options.sourceMapTarget = path.basename(el.dest);
 
-			var res = babel.transformFileSync(el.src[0], options);
+			var transformed = babel.transform(code.join('\n'), options);
 			var sourceMappingURL = '';
 
-			if (res.map) {
+			if (transformed.map) {
 				sourceMappingURL = '\n//# sourceMappingURL=' + path.basename(el.dest) + '.map';
 			}
 
-			grunt.file.write(el.dest, res.code + sourceMappingURL + '\n');
+			grunt.file.write(el.dest, transformed.code + sourceMappingURL + '\n');
 
-			if (res.map) {
-				grunt.file.write(el.dest + '.map', JSON.stringify(res.map));
+			if (transformed.map) {
+				grunt.file.write(el.dest + '.map', JSON.stringify(transformed.map));
 			}
 		});
 	});
