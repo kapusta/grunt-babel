@@ -2,14 +2,13 @@
 module.exports = function (grunt) {
 	grunt.initConfig({
 		babel: {
-			compile: {
-				options: {
-					sourceMap: true,
-					presets: ['es2015']
-				},
-				files: {
-					'test/tmp/fixture-compiled.js': 'test/fixtures/fixture.js'
-				}
+			options: {
+				sourceMaps: true,
+				presets: ['es2015']
+			},
+			test: {
+				src: ['test/fixtures/fixture.js'],
+				dest: 'test/tmp/fixture-compiled.js'
 			}
 		},
 		nodeunit: {
