@@ -11,6 +11,9 @@ exports.babel = {
 
 		test.deepEqual(json.file, 'fixture-compiled.js');
 		test.ok(json.mappings);
+		test.ok(json.sources.length);
+		test.ok(json.sources[0] !== 'unknown');
+		test.ok(json.sourcesContent.length);
 		test.ok(/\/\/# sourceMappingURL=fixture-compiled.js.map\n$/.test(code));
 		test.done();
 	}
