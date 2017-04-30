@@ -20,7 +20,12 @@ module.exports = function (grunt) {
 
 			options.sourceMapTarget = path.basename(el.dest);
 
+			// Because we use babel.transform() to directly transform a string of code
+			// the 'sources' array that would be in the sourcemap is set to 'unknown',
+			// so we will assign the sources after doing the transform().
 			const transformed = babel.transform(code.join('\n'), options);
+			transformed.map.sources = el.src;
+
 			let sourceMappingURL = '';
 
 			if (transformed.map) {
