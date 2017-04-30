@@ -6,9 +6,22 @@ module.exports = function (grunt) {
 				sourceMaps: true,
 				presets: ['es2015']
 			},
-			test: {
+			compactFormat: {
 				src: ['test/fixtures/fixture.js'],
 				dest: 'test/tmp/fixture-compiled.js'
+			},
+			filesObjectFormat: {
+				files: {
+					'test/tmp/fixture-compiled.js': ['test/fixtures/*.js']
+				}
+			},
+			filesArrayFormat: {
+				files: [
+					{
+						src: ['test/fixtures/fixture.js'],
+						dest: 'test/tmp/fixture-compiled.js'
+					}
+				]
 			}
 		},
 		nodeunit: {
@@ -23,5 +36,16 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
-	grunt.registerTask('default', ['clean', 'babel', 'nodeunit', 'clean']);
+	grunt.registerTask('default', [
+		'clean',
+		'babel:compactFormat',
+		'nodeunit',
+		'clean',
+		'babel:filesObjectFormat',
+		'nodeunit',
+		'clean',
+		'babel:filesArrayFormat',
+		'nodeunit',
+		'clean']
+	);
 };
